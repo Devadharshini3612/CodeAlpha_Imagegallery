@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Responsive Image Gallery</title>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        background: #fdfdfd;
+        color: #333;
+        line-height: 1.6;
+    }
+
+    h1 {
+        font-size: 2.5em;
+        margin-bottom: 20px;
+        color: #222;
+        letter-spacing: 1px;
+    }
+
+    .gallery-container {
+        text-align: center;
+        padding: 40px 20px;
+    }
+
+    .filter-buttons button {
+        margin: 8px;
+        padding: 12px 20px;
+        border: none;
+        background: #0077cc;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 50px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: background 0.3s, transform 0.2s;
+    }
+
+    .filter-buttons button:hover {
+        background: #005fa3;
+        transform: translateY(-2px);
+    }
+
+    .gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-top: 30px;
+        padding: 0 20px;
+    }
+
+    .gallery-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: 15px;
+        box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+        height: 200px;
+    }
+
+    .gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.5s, filter 0.5s;
+    }
+
+    .gallery-item:hover {
+        transform: scale(1.02);
+        box-shadow: 0 15px 25px rgba(0,0,0,0.2);
+    }
+
+    .gallery-item:hover img {
+        transform: scale(1.1);
+        filter: brightness(75%);
+    }
+
+    /* Overlay text on hover */
+    .gallery-item::after {
+        content: "View";
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        color: white;
+        font-size: 20px;
+        background: rgba(0,0,0,0.6);
+        padding: 10px 20px;
+        border-radius: 25px;
+        transition: transform 0.3s;
+    }
+
+    .gallery-item:hover::after {
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    /* Lightbox */
+    .lightbox {
+        
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.95);
+    animation: fadeIn 0.5s;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+
+    }
+
+    .lightbox-content {
+        margin: auto;
+        display: block;
+        max-width: 90%;
+        max-height: 80vh;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        border-radius: 10px;
+        transition: opacity 0.5s;
+    }
+
+    .close {
+        position: absolute;
+        top: 20px; right: 40px;
+        color: #fff;
+        font-size: 40px;
+        cursor: pointer;
+        transition: color 0.3s;
+    }
+
+    .close:hover {
+        color: #ccc;
+    }
+
+    .lightbox-nav {
+        position: absolute;
+        bottom: 30px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .lightbox-nav button {
+        background: #fff;
+        border: none;
+        padding: 12px 25px;
+        margin: 0 10px;
+        cursor: pointer;
+        font-size: 16px;
+        border-radius: 25px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        transition: background 0.3s, transform 0.2s;
+    }
+
+    .lightbox-nav button:hover {
+        background: #eee;
+        transform: translateY(-2px);
+    }
+
+    @keyframes fadeIn {
+        from {opacity: 0;}
+        to {opacity: 1;}
+    }
+
+    @media (max-width: 600px) {
+        .filter-buttons button {
+            display: block;
+            width: 80%;
+            margin: 10px auto;
+        }
+        .gallery-item {
+            height: 150px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<div class="gallery-container">
+    <h1>My Image Gallery</h1>
+
+    <div class="filter-buttons">
+        <button onclick="filterImages('all')">All</button>
+        <button onclick="filterImages('nature')">Nature</button>
+        <button onclick="filterImages('city')">City</button>
+        <button onclick="filterImages('people')">People</button>
+    </div>
+
+    <div class="gallery">
+            <div class="gallery-item" data-category="nature">
+                <img src="nature1.jpg.jpg" alt="Nature 1">
+            </div>
+            <div class="gallery-item" data-category="city">
+                <img src="city1.jpeg" alt="City 1">
+            </div>
+            <div class="gallery-item" data-category="people">
+                <img src="people1.jpeg" alt="People 1">
+            </div>
+            <div class="gallery-item" data-category="nature">
+                <img src="nature2.jpg.jpg" alt="Nature 2">
+            </div>
+            <div class="gallery-item" data-category="city">
+                <img src="city2.jpg" alt="City 2">
+            </div>
+            <div class="gallery-item" data-category="people">
+                <img src="people2.jpg" alt="People 2">
+            </div>
+            <div class="gallery-item" data-category="nature">
+                <img src="nature3.jpeg" alt="Nature 3">
+            </div>
+            <div class="gallery-item" data-category="city">
+                <img src="city3.jpeg" alt="City 3">
+            </div>
+            <div class="gallery-item" data-category="people">
+                <img src="people3.jpeg" alt="People 3">
+            </div>
+            <div class="gallery-item" data-category="nature">
+                <img src="nature4.jpeg" alt="Nature 3">
+            </div>
+            <div class="gallery-item" data-category="city">
+                <img src="city4.jpeg" alt="City 3">
+            </div>
+            <div class="gallery-item" data-category="people">
+                <img src="people4.jpeg" alt="People 3">
+            </div>
+
+    </div>
+</div>
+
+<!-- Lightbox Modal -->
+<div id="lightbox" class="lightbox">
+    <span class="close" onclick="closeLightbox()">&times;</span>
+    <img class="lightbox-content" id="lightbox-img">
+    <div class="lightbox-nav">
+        <button onclick="prevImage()">&#10094; Prev</button>
+        <button onclick="nextImage()">Next &#10095;</button>
+        <div style="color: #ccc; font-size: 14px; margin-top:10px;">Tap outside or press Esc to close</div>
+    </div>
+</div>
+
+<script>
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    let currentIndex = 0;
+    let images = [];
+
+    galleryItems.forEach((item, index) => {
+        let imgSrc = item.querySelector('img').src;
+        images.push(imgSrc);
+        item.addEventListener('click', () => openLightbox(index));
+    });
+
+    function openLightbox(index) {
+        currentIndex = index;
+        showLightboxImage();
+        lightbox.style.display = "block";
+    }
+
+    function closeLightbox() {
+        lightbox.style.display = "none";
+    }
+
+    function showLightboxImage() {
+        lightboxImg.style.opacity = 0;
+        setTimeout(() => {
+            lightboxImg.src = images[currentIndex];
+            lightboxImg.style.opacity = 1;
+        }, 200);
+    }
+
+    function nextImage() {
+        currentIndex = (currentIndex + 1) % images.length;
+        showLightboxImage();
+    }
+
+    function prevImage() {
+        currentIndex = (currentIndex - 1 + images.length) % images.length;
+        showLightboxImage();
+    }
+
+    function filterImages(category) {
+        galleryItems.forEach(item => {
+            if (category === 'all' || item.getAttribute('data-category') === category) {
+                item.style.display = 'block';
+                setTimeout(() => {
+                    item.style.opacity = 1;
+                    item.style.transform = "scale(1)";
+                }, 0);
+            } else {
+                item.style.opacity = 0;
+                item.style.transform = "scale(0.8)";
+                setTimeout(() => { item.style.display = 'none'; }, 300);
+            }
+        });
+    }
+
+    lightbox.addEventListener('click', function(e){
+        if (e.target == lightbox) closeLightbox();
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === "Escape" || e.key === "Enter") closeLightbox();
+        if (e.key === "ArrowRight") nextImage();
+        if (e.key === "ArrowLeft") prevImage();
+    });
+</script>
+</body>
+</html>
